@@ -6,8 +6,8 @@ import queue
 import numpy as np
 from time import sleep
 from pathlib import Path
-from STT import STT
-from TTS import TextToSpeech
+from speech_to_text import SpeechToText
+from text_to_speech import TextToSpeech
 from completions import Completions
 
 
@@ -16,7 +16,7 @@ class Recording(object):
         self.speaking_status = "not speaking"
         self.stop_recording_flag = False
         self.q = queue.Queue()
-        self.stt = STT()
+        self.stt = SpeechToText()
         self.tts = TextToSpeech()
         self.completions = Completions()
         self.audio_file = Path(__file__).parent / "assets/audios/input.mp3"

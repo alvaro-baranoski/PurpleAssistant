@@ -1,7 +1,7 @@
 from openai import OpenAI
 from dotenv import load_dotenv
 
-class STT(object):
+class SpeechToText(object):
     def __init__(self) -> None:
         load_dotenv()
         self.client = OpenAI()
