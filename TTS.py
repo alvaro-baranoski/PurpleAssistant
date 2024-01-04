@@ -3,7 +3,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 
-class TTS(object):
+class TextToSpeech(object):
     def __init__(self) -> None:
         load_dotenv()
         self.client = OpenAI()
@@ -13,7 +13,7 @@ class TTS(object):
         print("Received following text:")
         print(text)
         
-        speech_file_path = Path(__file__).parent / "audios/response.mp3"
+        speech_file_path = Path(__file__).parent / "assets/audios/response.mp3"
         response = self.client.audio.speech.create(
             model="tts-1",
             voice="alloy",
@@ -22,3 +22,5 @@ class TTS(object):
 
         response.stream_to_file(speech_file_path)
         print("file saved successfully")
+        
+        return speech_file_path

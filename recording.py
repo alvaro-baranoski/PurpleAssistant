@@ -7,7 +7,7 @@ import numpy as np
 from time import sleep
 from pathlib import Path
 from STT import STT
-from TTS import TTS
+from TTS import TextToSpeech
 from completions import Completions
 
 
@@ -17,9 +17,9 @@ class Recording(object):
         self.stop_recording_flag = False
         self.q = queue.Queue()
         self.stt = STT()
-        self.tts = TTS()
+        self.tts = TextToSpeech()
         self.completions = Completions()
-        self.audio_file = Path(__file__).parent / "audios/input.mp3"
+        self.audio_file = Path(__file__).parent / "assets/audios/input.mp3"
         self.channels = 2
         self.samplerate = 44100
         self.silence_threshold = 0.001
@@ -40,8 +40,8 @@ class Recording(object):
 
             transcript = self.stt.transcript_audio_file(self.audio_file)
             response = self.completions.send_message(transcript)
-            self.tts.generate_audio_from_text(response)
-            self.__read_aloud_audio_file()
+            response_audio_file = self.tts.generate_audio_from_text(response)
+            self.__read_aloud_audio_file(response_audio_file)
 
     def start_recording(self):
         if os.path.exists(self.audio_file):
@@ -65,8 +65,7 @@ class Recording(object):
 
         self.__start_stop_recording(indata)
 
-    def __read_aloud_audio_file(self):
-        response_audio_file = Path(__file__).parent / "audios/response.mp3"
+    def __read_aloud_audio_file(self, response_audio_file):
         data, fs = sf.read(response_audio_file, dtype='float32')
         sd.play(data, fs)
         sd.wait()
