@@ -26,6 +26,29 @@ class Recording(object):
         self.samplerate = 44100
         self.silence_threshold = 0.001
 
+    def start_recording(self):
+        if os.path.exists(self.audio_file):
+            os.remove(self.audio_file)
+
+        with sf.SoundFile(self.audio_file, mode="x", samplerate=self.samplerate, channels=self.channels) as file:
+            with sd.InputStream(samplerate=self.samplerate, channels=self.channels, callback=self.__callback):
+                print('#' * 80)
+                print('press Ctrl+C to stop the recording')
+                print('#' * 80)
+                while True:
+                    if not self.stop_recording_flag:
+                        file.write(self.q.get())
+                        print(self.q.get())
+
+    def __callback(self, indata, frames, time, status):
+        """This is called (from a separate thread) for each audio block."""
+        if status:
+            print(status, file=sys.stderr)
+        self.q.put(indata.copy())
+
+        self.__start_stop_recording(indata)
+
+
     def __start_stop_recording(self, indata):
         rms = np.sqrt(np.mean(indata**2))
 
@@ -50,31 +73,8 @@ class Recording(object):
             response_audio_file = self.tts.generate_audio_from_text(response)
             self.__read_aloud_audio_file(response_audio_file)
 
-    def start_recording(self):
-        if os.path.exists(self.audio_file):
-            os.remove(self.audio_file)
-
-        with sf.SoundFile(self.audio_file, mode="x", samplerate=self.samplerate, channels=self.channels) as file:
-            with sd.InputStream(samplerate=self.samplerate, channels=self.channels, callback=self.__callback):
-                print('#' * 80)
-                print('press Ctrl+C to stop the recording')
-                print('#' * 80)
-                while True:
-                    file.write(self.q.get())
-                    print(self.q.get())
-                    if self.stop_recording_flag:
-                        print("breaking")
-                        break
-
-    def __callback(self, indata, frames, time, status):
-        """This is called (from a separate thread) for each audio block."""
-        if status:
-            print(status, file=sys.stderr)
-        self.q.put(indata.copy())
-
-        self.__start_stop_recording(indata)
-
     def __read_aloud_audio_file(self, response_audio_file):
         data, fs = sf.read(response_audio_file, dtype='float32')
         sd.play(data, fs)
         sd.wait()
+
