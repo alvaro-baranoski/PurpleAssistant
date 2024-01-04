@@ -1,13 +1,20 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-
+from utils import Utils
 
 class Completions(object):
     def __init__(self) -> None:
         load_dotenv()
         self.client = OpenAI()
+        
+        assistant_description = ""
+        with open(f"{Utils.get_root_directory()}/assets/prompts/assistant_description.txt") as f:
+            assistant_description = f.read()
+        
+        print(assistant_description)
+        
         self.messages = [
-            {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
+            {"role": "system", "content": assistant_description},
         ]
 
     def send_message(self, message):
