@@ -4,7 +4,7 @@ from ask_sdk_model import Response
 import ask_sdk_core.utils as ask_utils
 from dotenv import load_dotenv
 from openai import OpenAI
-from plugins.json_handler_plugin import JsonHandlerPlugin
+from plugins.handler_plugin import HandlerPlugin
 
 import json
 
@@ -13,6 +13,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         load_dotenv()
         self.end_session_flag = False
         self.client = OpenAI()
+        self.handler_plugin = HandlerPlugin()
         with open("assets\introduction.txt") as f:
             self.assistant_description = f.read()
         super().__init__()
@@ -66,6 +67,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         try:
             result = json.loads(response_json)
             self.end_session_flag = result["end_session"]
+            self.handler_plugin.handle(result)
             return result["response"]
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
