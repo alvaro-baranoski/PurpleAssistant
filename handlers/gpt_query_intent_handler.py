@@ -10,6 +10,8 @@ class GptQueryIntentHandler(AbstractRequestHandler):
     def __init__(self) -> None:
         load_dotenv()
         self.client = OpenAI()
+        with open("assets\introduction.txt") as f:
+            self.assistant_description = f.read()
         super().__init__()
 
     """Handler for Gpt Query Intent."""
@@ -37,7 +39,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
     def generate_gpt_response(self, chat_history, new_question):
         try:
             messages = [
-                {"role": "system", "content": "You are a helpful assistant."}]
+                {"role": "system", "content": self.assistant_description}]
             for question, answer in chat_history[-10:]:
                 messages.append({"role": "user", "content": question})
                 messages.append({"role": "assistant", "content": answer})
