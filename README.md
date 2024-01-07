@@ -4,7 +4,7 @@ This code is a Flask API that is used to serve as the basis to a custom skill in
 
 To run it you need to do the following:
 - Check if skill ID changed (if you removed and created a new skill)
-- run python hello.py
+- run python app.py
 - run ngrok http 5000
 - Get endpoint url, go to Endpoints menu in the Alexa Skill, and update the endpoint field
 
