@@ -4,6 +4,7 @@ from ask_sdk_model import Response
 import ask_sdk_core.utils as ask_utils
 from dotenv import load_dotenv
 from openai import OpenAI
+from plugins.json_handler_plugin import JsonHandlerPlugin
 
 
 class GptQueryIntentHandler(AbstractRequestHandler):
@@ -63,7 +64,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
             split_response = response.split(delimiter)
             result = split_response[0].strip()
             json_raw = split_response[1].strip()
-            print(json_raw)
+            JsonHandlerPlugin.handle(json_raw)
             return result
         else:
             return response
