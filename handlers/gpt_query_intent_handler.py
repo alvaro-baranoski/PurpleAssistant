@@ -51,6 +51,19 @@ class GptQueryIntentHandler(AbstractRequestHandler):
                 n=1,
                 temperature=0.5
             )
-            return response.choices[0].message.content
+            result = self.parse_gpt_response(
+                response.choices[0].message.content)
+            return result
         except Exception as e:
             return f"Error generating response: {str(e)}"
+
+    def parse_gpt_response(self, response):
+        delimiter = "##########"
+        if delimiter in response:
+            split_response = response.split(delimiter)
+            result = split_response[0].strip()
+            json_raw = split_response[1].strip()
+            print(json_raw)
+            return result
+        else:
+            return response
