@@ -10,7 +10,8 @@ class TodoistPlugin:
         self.api.add_task(
             content=response["body"]["content"],
             due_string=response["body"]["due_string"],
-            project_id=self.parse_project_id(response["body"]["project"]))
+            project_id=self.parse_project_id(response["body"]["project"]),
+            labels=["Purple"])
         
         print("done!")
         return
