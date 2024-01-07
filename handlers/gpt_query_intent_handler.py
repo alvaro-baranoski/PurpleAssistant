@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from plugins.json_handler_plugin import JsonHandlerPlugin
 
+import json
 
 class GptQueryIntentHandler(AbstractRequestHandler):
     def __init__(self) -> None:
         load_dotenv()
+        self.end_session_flag = False
         self.client = OpenAI()
         with open("assets\introduction.txt") as f:
             self.assistant_description = f.read()
@@ -34,6 +36,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
             handler_input.response_builder
             .speak(response)
             .ask("Any other questions?")
+            .set_should_end_session(self.end_session_flag)
             .response
         )
 
@@ -46,9 +49,10 @@ class GptQueryIntentHandler(AbstractRequestHandler):
                 messages.append({"role": "assistant", "content": answer})
             messages.append({"role": "user", "content": new_question})
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-3.5-turbo-1106",
+                response_format={ "type": "json_object" },
                 messages=messages,
-                max_tokens=300,
+                max_tokens=600,
                 n=1,
                 temperature=0.5
             )
@@ -58,13 +62,6 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         except Exception as e:
             return f"Error generating response: {str(e)}"
 
-    def parse_gpt_response(self, response):
-        delimiter = "##########"
-        if delimiter in response:
-            split_response = response.split(delimiter)
-            result = split_response[0].strip()
-            json_raw = split_response[1].strip()
-            JsonHandlerPlugin.handle(json_raw)
-            return result
-        else:
-            return response
+    def parse_gpt_response(self, response_json):
+        result = json.loads(response_json)
+        return result["response"]
