@@ -63,5 +63,9 @@ class GptQueryIntentHandler(AbstractRequestHandler):
             return f"Error generating response: {str(e)}"
 
     def parse_gpt_response(self, response_json):
-        result = json.loads(response_json)
-        return result["response"]
+        try:
+            result = json.loads(response_json)
+            self.end_session_flag = result["end_session"]
+            return result["response"]
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
