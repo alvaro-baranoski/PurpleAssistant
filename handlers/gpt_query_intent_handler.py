@@ -2,7 +2,6 @@ from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 import ask_sdk_core.utils as ask_utils
-from dotenv import load_dotenv
 from openai import OpenAI
 from plugins.handler_plugin import HandlerPlugin
 
@@ -10,7 +9,6 @@ import json
 
 class GptQueryIntentHandler(AbstractRequestHandler):
     def __init__(self) -> None:
-        load_dotenv()
         self.end_session_flag = False
         self.client = OpenAI()
         self.handler_plugin = HandlerPlugin()

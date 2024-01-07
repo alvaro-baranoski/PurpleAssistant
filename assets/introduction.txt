@@ -12,4 +12,5 @@ The "plugin" field is required and string. It represents the plugin to active.
 The "body" field is optional and object. It represents the aditional data for each plugin.
     If the plugin is "todoist", body should contain the following fields:
         "content" (the title of the task),
+        "project" (the project in which this task fits. Options are "personal", "professional" or "study". Choose one of them as you see fit.)
         "due_string" (when the task needs to be completed)

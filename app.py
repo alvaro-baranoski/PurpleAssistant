@@ -9,9 +9,12 @@ from handlers.cancel_and_stop_intent_handler import CancelAndStopIntentHandler
 from handlers.session_ended_request_handler import SessionEndedRequestHandler
 from handlers.all_exceptions_handler import AllExceptionHandler
 from handlers.gpt_query_intent_handler import GptQueryIntentHandler
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 skill_builder = SkillBuilder()
+load_dotenv()
 
 
 skill_builder.add_request_handler(LaunchRequestHandler())
