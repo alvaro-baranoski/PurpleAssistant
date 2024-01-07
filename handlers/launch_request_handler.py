@@ -11,9 +11,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speech_text = "Welcome to the Alexa Skills Kit, you can say hello!"
+        speech_text = "Chat GPT Mode Activated"
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["chat_history"] = []
 
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Hello World", speech_text)).set_should_end_session(
-            False)
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response

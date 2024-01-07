@@ -8,6 +8,7 @@ from handlers.help_intent_handler import HelpIntentHandler
 from handlers.cancel_and_stop_intent_handler import CancelAndStopIntentHandler
 from handlers.session_ended_request_handler import SessionEndedRequestHandler
 from handlers.all_exceptions_handler import AllExceptionHandler
+from handlers.gpt_query_intent_handler import GptQueryIntentHandler
 
 app = Flask(__name__)
 skill_builder = SkillBuilder()
@@ -15,6 +16,7 @@ skill_builder = SkillBuilder()
 
 skill_builder.add_request_handler(LaunchRequestHandler())
 skill_builder.add_request_handler(HelloWorldIntentHandler())
+skill_builder.add_request_handler(GptQueryIntentHandler())
 skill_builder.add_request_handler(HelpIntentHandler())
 skill_builder.add_request_handler(CancelAndStopIntentHandler())
 skill_builder.add_request_handler(SessionEndedRequestHandler())
