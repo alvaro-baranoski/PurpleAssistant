@@ -11,8 +11,9 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         load_dotenv()
         self.client = OpenAI()
         super().__init__()
-    
+
     """Handler for Gpt Query Intent."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return ask_utils.is_intent_name("GptQueryIntent")(handler_input)
@@ -27,15 +28,16 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         session_attr["chat_history"].append((query, response))
 
         return (
-                handler_input.response_builder
-                    .speak(response)
-                    .ask("Any other questions?")
-                    .response
-            )
-        
+            handler_input.response_builder
+            .speak(response)
+            .ask("Any other questions?")
+            .response
+        )
+
     def generate_gpt_response(self, chat_history, new_question):
         try:
-            messages = [{"role": "system", "content": "You are a helpful assistant."}]
+            messages = [
+                {"role": "system", "content": "You are a helpful assistant."}]
             for question, answer in chat_history[-10:]:
                 messages.append({"role": "user", "content": question})
                 messages.append({"role": "assistant", "content": answer})
